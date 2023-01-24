@@ -1,6 +1,6 @@
-import FavoritePage from '../pages/favorites/index';
+
 const toggleFavorite = (id: number) => {
-     console.log('toggleFavorite: llamado');
+    // console.log('toggleFavorite: llamado');
 
      let favorites: number[] = JSON.parse(
           localStorage.getItem('favorites') || '[]'
