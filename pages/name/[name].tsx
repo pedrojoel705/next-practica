@@ -1,19 +1,22 @@
 import { useState } from "react";
+
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { Button, Card, Container, Grid, Text, Image } from "@nextui-org/react";
 
 import confetti from "canvas-confetti";
 
 import { Layout } from "../../components/layouts";
-import { Pokemon } from "../../interfaces";
+import { Pokemon, Sprites } from '../../interfaces/pokemons_full';
+import { pokeApi } from "../../api";
 import { localFavorite } from "../../utils";
+import { PokemonListResponse } from "../../interfaces";
 import { GetPokemonInfo } from '../../utils';
 
 interface Props {
   pokemon: Pokemon;
 }
 
-const PokemonPage: NextPage<Props> = ({ pokemon }) => {
+const PokemonByNamePage: NextPage<Props> = ({ pokemon }) => {
   const [isInFavorite, setIsInFavorite] = useState(
     localFavorite.existInFavorite(pokemon.id)
   );
@@ -33,9 +36,7 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
   //console.log(pokemon)
 
   return (
-    <Layout
-      title={pokemon.name.charAt(0).toLocaleUpperCase() + pokemon.name.slice(1)}
-    >
+    <Layout title={pokemon.name}>
       <Grid.Container css={{ marginTop: "5px" }} gap={2}>
         <Grid xs={12} sm={4}>
           <Card hoverable css={{ padding: "30px" }}>
@@ -43,7 +44,7 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
               <Card.Image
                 src={
                   pokemon.sprites.other?.dream_world.front_default ||
-                  "/no-image.pgn"
+                  "/no-image.png"
                 }
                 alt={pokemon.name}
                 width="100%"
@@ -111,32 +112,26 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
 // You should use getStaticPaths if you’re stati1ally pre-rendering pages that use dynamic routes
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
-  const pokemons151 = [...Array(151)].map((value, index) => `${index + 1}`);
+  const { data } = await pokeApi.get<PokemonListResponse>("/pokemon?limit=151");
 
-  //console.log({ pokemons151 })
+  const pokemonName: string[] = data.results.map((pokemon) => pokemon.name);
 
   return {
-    paths: pokemons151.map((id) => ({
-      params: { id },
+    paths: pokemonName.map((name) => ({
+      params: { name },
     })),
     fallback: false,
   };
 };
 
-
-
 export const getStaticProps: GetStaticProps = async ({ params }) => {
- 
- 
-    const { id } = params as { id: string };
-
-  
+  const { name } = params as { name: string };
 
   return {
     props: {
-      pokemon: await GetPokemonInfo(id)
+      pokemon: await GetPokemonInfo(name)
     },
   };
 };
 
-export default PokemonPage;
+export default PokemonByNamePage;
