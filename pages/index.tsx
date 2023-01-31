@@ -12,19 +12,13 @@ interface Props {
 }
 
 const HomePage: NextPage<Props> = ({ pokemons }) => {
-  //console.log(pokemons);
+
 
   return (
     <>
       <Layout title="Listado Pokemons">
 
-       <Image
-       src="/img/banner.png"
-       width={200}
-       height={150}
-       />
-        
-       
+            
         <Grid.Container gap={2} justify='flex-start'>
           {
             pokemons.map((pokemon) => (

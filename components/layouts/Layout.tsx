@@ -12,7 +12,7 @@ const origin= (typeof window === 'undefined')?'':window.location.origin
 
 export const Layout: FC<Props> = ({ children, title }) => {
 
-console.log(origin)
+//console.log(origin)
 
     return (
         <>
@@ -24,7 +24,7 @@ console.log(origin)
 
                 <meta property="og:title" content={`Informacion sobre ${title}`} />
                 <meta property="og:description" content={`Esta es la pagina sobre ${title}`}/>
-                <meta property="og:image" content="http://localhost:3000/img/banner.png"/>
+                <meta property="og:image" content={`${origin}/img/banner.png`}/>
             </Head>
 
             <Navbar />

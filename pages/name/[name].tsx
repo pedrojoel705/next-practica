@@ -118,7 +118,7 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 
   return {
     paths: pokemonName.map((name) => ({
-      params: { name },
+      params: { name }
     })),
     fallback: false,
   };
